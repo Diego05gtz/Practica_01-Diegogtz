@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ccl6b6e7eaj4i"]
+
+[ext_resource type="Script" uid="uid://ck2ltu8lgsxtu" path="res://shield_pickup.gd" id="1_r4t8n"]
+[ext_resource type="Texture2D" uid="uid://dtvsbofob5fwe" path="res://art/mob/ToxicFrogPurpleBlue_Idle.png" id="2_h5sll"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r4t8n"]
+
+[node name="Area2D" type="Area2D"]
+collision_layer = 4
+script = ExtResource("1_r4t8n")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+light_mask = 4
+scale = Vector2(3, 3)
+texture = ExtResource("2_h5sll")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+light_mask = 4
+position = Vector2(1.00002, 1)
+scale = Vector2(3, 3)
+shape = SubResource("CircleShape2D_r4t8n")

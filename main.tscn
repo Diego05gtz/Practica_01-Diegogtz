@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3 uid="uid://sy287c1abkq8"]
+
+[ext_resource type="Script" uid="uid://ddac0do3okg5o" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://xcbf4l3ntbl3" path="res://mob.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://3d4kn36wtmqw" path="res://player.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://73t5ljc588sg" path="res://hud.tscn" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://dslsl4i0cp4kj" path="res://art/background/pared-piedra-roca-ladrillos-fondo-juego-musgo-antiguo-estilo-dibujos-animados_191307-533.png" id="4_5vw27"]
+[ext_resource type="AudioStream" uid="uid://cbvpwlkxt1oi2" path="res://art/House In a Forest Loop.ogg" id="5_7mycd"]
+[ext_resource type="AudioStream" uid="uid://do8gixr8v51jv" path="res://art/gameover.wav" id="6_272bh"]
+[ext_resource type="PackedScene" uid="uid://ccl6b6e7eaj4i" path="res://shield_pickup.tscn" id="7_272bh"]
+
+[sub_resource type="Curve2D" id="Curve2D_1bvp3"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 478, 0, 0, 0, 0, 0, 480, 718, 0, 0, 0, 0, 2, 713, 0, 0, 0, 0, 0, -1)
+}
+point_count = 5
+
+[node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
+mob_scene = ExtResource("2_1bvp3")
+shield_scene = ExtResource("7_272bh")
+
+[node name="Background" type="TextureRect" parent="."]
+z_index = -100
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_5vw27")
+stretch_mode = 6
+
+[node name="Player" parent="." instance=ExtResource("2_h2yge")]
+position = Vector2(240, 495)
+collision_mask = 2
+
+[node name="MobTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(240, 450)
+
+[node name="MobPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_1bvp3")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+position = Vector2(0, -1)
+rotation = 0.00209205
+
+[node name="HUD" parent="." instance=ExtResource("4_1bvp3")]
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_272bh")
+volume_db = 24.0
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_7mycd")
+volume_db = 24.0
+parameters/looping = true
+
+[connection signal="hit" from="Player" to="." method="game_over"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
